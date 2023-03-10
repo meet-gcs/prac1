@@ -2,7 +2,7 @@
 require("./src/db/conn");
 const express = require("express");
 const app = express();
-const port = "8000";
+const port = "5000";
 const bodyParser = require("body-parser");
 const path = require("path");
 const fileUpload = require("express-fileupload");

@@ -30,10 +30,10 @@ const schema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
-    validate(val) {
-      if (!validator.isEmail(val)) {
-        throw new Error("invalid email");
+    unique: [true, "email already exist"],
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error("email is invalid");
       }
     },
   },
@@ -44,7 +44,6 @@ const schema = new mongoose.Schema({
   userName: {
     type: String,
     required: true,
-    unique: true,
   },
   password: {
     type: String,
@@ -52,12 +51,17 @@ const schema = new mongoose.Schema({
   },
   image: {
     type: String,
+    required: true,
+  },
+  doc: {
+    type: String,
+    required: true,
   },
 });
 schema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 12);
-    console.log(this.password);
+    console.log("done");
   }
   next();
 });
