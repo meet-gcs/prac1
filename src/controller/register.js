@@ -20,7 +20,6 @@ const postRegister = async (req, res) => {
     const image = req.files.image;
     const doc = req.files.doc;
     // console.log(image);
-    // console.log(doc);
 
     // console.log(image.image.name);
 
