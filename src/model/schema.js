@@ -67,23 +67,7 @@ const schema = new mongoose.Schema({
   //   },
   // ],
 });
-schema.methods.getToken = async function () {
-  try {
-    console.log("try");
-    // console.log(process.env.SECRET_KEY);
-    const token = jwt.sign(
-      { _id: this._id.toString() },
-      process.env.SECRET_KEY
-    );
 
-    // this.tokens = this.tokens.concat({ token: token });
-    // await this.save();
-    console.log("token is " + token);
-    return token;
-  } catch (error) {
-    console.log(error);
-  }
-};
 schema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 12);
