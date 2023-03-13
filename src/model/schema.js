@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const schema = new mongoose.Schema({
   firstName: {
@@ -37,8 +38,8 @@ const schema = new mongoose.Schema({
       }
     },
   },
-  phoneNum: {
-    type: Number,
+  phone: {
+    type: String,
     required: true,
   },
   userName: {
@@ -53,11 +54,36 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  doc: {
+  document: {
     type: String,
     required: true,
   },
+  // tokens: [
+  //   {
+  //     token: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //   },
+  // ],
 });
+schema.methods.getToken = async function () {
+  try {
+    console.log("try");
+    // console.log(process.env.SECRET_KEY);
+    const token = jwt.sign(
+      { _id: this._id.toString() },
+      process.env.SECRET_KEY
+    );
+
+    // this.tokens = this.tokens.concat({ token: token });
+    // await this.save();
+    console.log("token is " + token);
+    return token;
+  } catch (error) {
+    console.log(error);
+  }
+};
 schema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 12);

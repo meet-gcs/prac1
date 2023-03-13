@@ -3,29 +3,36 @@ const model = require("../model/schema");
 const path = require("path");
 const iPath = "/Users/CS014/prac1/public/upload/image/";
 const dPath = "/Users/CS014/prac1/public/upload/document/";
+const jwt = require("jsonwebtoken");
 
 var path1 = "";
 var path2 = "";
 
 const postRegister = async (req, res) => {
   try {
-    // console.log(req.body);
+    console.log(req.body);
+    // console.log(req.files);
+
     //image upload
     const user = req.body.email;
     const eCheck = await model.findOne({ email: user });
+    // console.log(eCheck);
     const user1 = req.body.userName;
     const uCheck = await model.findOne({ userName: user1 });
-    // console.log(read);
+    // console.log(uCheck);
+    const user2 = req.body.phone;
+    const pCheck = await model.findOne({ phoneNum: user2 });
 
     const image = req.files.image;
-    const doc = req.files.doc;
+    const document = req.files.document;
     // console.log(image);
+    // console.log(doc);
 
     // console.log(image.image.name);
 
     const ext = path.extname(image.name);
     // console.log("extention is " + ext);
-    const extD = path.extname(doc.name);
+    const extD = path.extname(document.name);
     // console.log("extention is " + extD);
 
     // image path genrating
@@ -34,54 +41,89 @@ const postRegister = async (req, res) => {
     path2 = path.join("doc_" + Date.now() + extD);
     // console.log(path2);
     if (eCheck === null) {
-      if (uCheck === null) {
-        if (ext == ".jpeg" || ext == ".jpg" || ext == ".png") {
-          // console.log(1);
-          if (extD == ".pdf") {
-            //setting values
-            const regData1 = new model({
-              ...req.body,
-              image: path1,
-              doc: path2,
-            });
-            const done2 = await regData1.save();
+      console.log("1");
+      if (pCheck === null) {
+        console.log("1");
 
-            const regData = new model({
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
-              dateOfBirth: req.body.dateOfBirth,
-              dateOfJoin: req.body.dateOfJoin,
-              gender: req.body.gender,
-              bloodGroup: req.body.bloodGroup,
-              email: req.body.email,
-              phoneNum: req.body.phoneNum,
-              userName: req.body.userName,
-              // password: req.body.password,
-              image: path1,
-              doc: path2,
-            });
+        if (uCheck === null) {
+          console.log("2");
 
-            //image uploaded
-            image.mv(iPath + path1);
+          if (ext == ".jpeg" || ext == ".jpg" || ext == ".png") {
+            console.log("3");
 
-            //pdf upload
-            doc.mv(dPath + path2);
+            // console.log(1);
+            if (extD == ".pdf") {
+              console.log("4");
+              //image uploaded
+              image.mv(iPath + path1);
+              //pdf upload
+              document.mv(dPath + path2);
+              //setting values
+              const regData = new model({
+                ...req.body,
+                image: path1,
+                document: path2,
+              });
+              const done = await regData.save();
 
-            res.status(201).send(regData);
+              const token = jwt.sign(
+                { _id: regData._id.toString() },
+                process.env.SECRET_KEY
+              );
+
+              res.send({
+                status: true,
+                statusCode: 201,
+                message: " new user registered",
+                data: { token: token },
+              });
+            } else {
+              res.send({
+                status: false,
+                statusCode: 400,
+                message: "please select a valid file with .pdf extention",
+                data: [],
+              });
+            }
           } else {
-            res.send("please select a valid file with .pdf extention");
+            res.send({
+              status: false,
+              statusCode: 400,
+              message: "enter a valid image with a jpeg ,png or jpg formate ",
+              data: [],
+            });
           }
         } else {
-          res.send("enter a valid image with a jpeg ,png or jpg formate ");
+          res.send({
+            status: false,
+            statusCode: 400,
+            message: "user with this username already there ",
+            data: [],
+          });
         }
       } else {
-        res.send("userName already exisit ");
+        res.send({
+          status: false,
+          statusCode: 400,
+          message: "user with this phone number  already there ",
+          data: [],
+        });
       }
     } else {
-      res.send("email already exisit ");
+      res.send({
+        status: false,
+        statusCode: 400,
+        message: "user with this email already there ",
+        data: [],
+      });
     }
   } catch (error) {
-    res.status(400).send(error);
+    res.send({
+      status: false,
+      statusCode: 400,
+      message: error,
+      data: [],
+    });
   }
 };
 
