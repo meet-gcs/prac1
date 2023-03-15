@@ -1,6 +1,4 @@
 const model = require("../model/schema");
-const iPath = "/Users/CS014/prac1/public/upload/image/";
-const path = require("path");
 
 const express = require("express");
 

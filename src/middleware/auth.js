@@ -13,7 +13,7 @@ const auth = async (req, res, next) => {
   } catch (error) {
     res.send({
       status: false,
-      statusCode: 401,
+      statusCode: 403,
       message: "user not found",
       data: error,
     });
