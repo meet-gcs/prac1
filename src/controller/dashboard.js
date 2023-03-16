@@ -2,12 +2,13 @@ const model = require("../model/schema");
 
 const express = require("express");
 
-const dashboard = async (req, res) => {
+const dashboard = async (req, res, next) => {
   try {
     // console.log("1");
     // console.log("req.body", req.body);
     // console.log(req.body.id);
     const data = await model.findOne({ _id: req.body.id }, { password: 0 });
+
     res.body = data;
     // console.log(res.body);
 
@@ -17,6 +18,7 @@ const dashboard = async (req, res) => {
       message: " new user data",
       data: res.body,
     });
+    next();
   } catch (error) {
     res.send({
       status: false,

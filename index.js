@@ -1,6 +1,7 @@
 require("dotenv").config();
 require("./src/db/conn");
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const port = "5000";
 const bodyParser = require("body-parser");
@@ -10,6 +11,11 @@ const router = require("./src/router/router");
 app.use(express.static(__dirname + "./public/"));
 // const model = require("./src/model/schema");
 app.use(fileUpload());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({

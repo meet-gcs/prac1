@@ -58,6 +58,9 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  deviceToken: {
+    type: String,
+  },
   // tokens: [
   //   {
   //     token: {

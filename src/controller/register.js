@@ -10,50 +10,52 @@ var path2 = "";
 
 const postRegister = async (req, res) => {
   try {
-    console.log(req.body);
-    // console.log(req.files);
+    console.log("body", req.body);
+    // console.log("files", req.files);
 
-    //image upload
     const user = req.body.email;
     const eCheck = await model.findOne({ email: user });
-    // console.log(eCheck);
+    // console.log("eCheck", eCheck);
     const user1 = req.body.userName;
     const uCheck = await model.findOne({ userName: user1 });
-    // console.log(uCheck);
+    // console.log("uCheck", uCheck);
     const user2 = req.body.phone;
-    const pCheck = await model.findOne({ phoneNum: user2 });
+    const pCheck = await model.findOne({ phone: user2 });
+    // console.log("pCheck", pCheck);
 
     const image = req.files.image;
     const document = req.files.document;
     // console.log(image);
-    // console.log(doc);
+    // console.log(document);
 
     // console.log(image.image.name);
 
     const ext = path.extname(image.name);
-    // console.log("extention is " + ext);
+    console.log("extention is " + ext);
     const extD = path.extname(document.name);
-    // console.log("extention is " + extD);
+    console.log("extention is " + extD);
 
     // image path genrating
     path1 = path.join("img_" + Date.now() + ext);
     // console.log(path1);
     path2 = path.join("doc_" + Date.now() + extD);
     // console.log(path2);
+
+    // console.log("123");
     if (eCheck === null) {
-      console.log("1");
+      // console.log("1");
       if (pCheck === null) {
-        console.log("1");
+        // console.log("1");
 
         if (uCheck === null) {
-          console.log("2");
+          // console.log("2");
 
           if (ext == ".jpeg" || ext == ".jpg" || ext == ".png") {
-            console.log("3");
+            // console.log("3");
 
             // console.log(1);
             if (extD == ".pdf") {
-              console.log("4");
+              // console.log("4");
               //image uploaded
               image.mv(iPath + path1);
               //pdf upload
@@ -64,6 +66,7 @@ const postRegister = async (req, res) => {
                 image: path1,
                 document: path2,
               });
+              // console.log("abc", regData);
               const done = await regData.save();
 
               const token = jwt.sign(

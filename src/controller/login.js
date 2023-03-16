@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const postLogin = async (req, res) => {
   try {
-    // console.log(req.body);s
+    console.log(req.body);
     // console.log(req.files);
     const password = req.body.password;
     // console.log(password);
@@ -38,7 +38,7 @@ const postLogin = async (req, res) => {
         // console.log("3");
         res.send({
           status: true,
-          statusCode: 401,
+          statusCode: 200,
           message: "logged in successfully ",
           data: { token: token },
         });
